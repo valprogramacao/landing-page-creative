@@ -1,40 +1,28 @@
-var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-// Change the icons inside the button based on previous settings
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
-
+// ===== Botão de tema (claro / escuro) =====
+// Coloca ou tira a classe "dark" do <html> e guarda a escolha no navegador.
+// Os ícones de lua e sol trocam sozinhos pelo CSS.
 var themeToggleBtn = document.getElementById('theme-toggle');
 
-themeToggleBtn.addEventListener('click', function() {
+themeToggleBtn.addEventListener('click', function () {
+    var isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+});
 
-    // toggle icons inside button
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
 
-    // if set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
+// ===== Menu do celular =====
+// Abre e fecha a lista de links quando clica no botão de três risquinhos.
+var menuToggleBtn = document.getElementById('menu-toggle');
+var menu = document.getElementById('menu');
 
-    // if NOT set via local storage previously
-    } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
-    }
-    
+menuToggleBtn.addEventListener('click', function () {
+    var isOpen = menu.classList.toggle('open');
+    menuToggleBtn.setAttribute('aria-expanded', isOpen);
+});
+
+// Fecha o menu ao clicar em um link
+menu.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+        menu.classList.remove('open');
+        menuToggleBtn.setAttribute('aria-expanded', false);
+    });
 });
